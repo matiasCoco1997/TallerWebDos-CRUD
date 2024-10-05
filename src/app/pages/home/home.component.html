@@ -1,0 +1,9 @@
+<app-navbar></app-navbar>
+<section class="bg-gray-900">
+  <div class="container mx-auto flex flex-wrap justify-between min-h-screen p-5 w-full lg:w-[65%]">
+    @for (sneaker of sneakers; track sneaker) {
+      <app-card class="w-full md:w-[50%] lg:w-[33%]" [sneaker]="sneaker"></app-card>
+    }
+  </div>
+</section>
+
