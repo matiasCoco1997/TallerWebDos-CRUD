@@ -1,18 +1,21 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { NavbarComponent } from '../../shared/navbar/navbar.component';
-import { CardComponent } from '../../shared/card/card.component';
-import { CommonModule } from '@angular/common';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Producto } from '../../models/producto';
 import { FooterComponent } from '../../shared/footer/footer.component';
 
 @Component({
-  selector: 'app-home',
+  selector: 'app-product',
   standalone: true,
-  imports: [NavbarComponent, CardComponent, CommonModule, FooterComponent],
-  templateUrl: './home.component.html',
-  styleUrl: './home.component.css'
+  imports: [NavbarComponent, FooterComponent],
+  templateUrl: './product.component.html',
+  styleUrl: './product.component.css'
 })
-export class HomeComponent {
+export class ProductComponent implements OnInit{
+
+  private sneakerId: number | null = null;
+
+  public sneakerSeleccionado: Producto | undefined;
 
   public sneakers: Producto[] = [
     {
@@ -79,5 +82,30 @@ export class HomeComponent {
       img:'assets/productos/adidas.jpeg'
     },
   ];
+
+  constructor(private route: ActivatedRoute, private router: Router) { }
+
+  ngOnInit(): void {
+    // Agarro el 'id' de la URL
+    this.route.paramMap.subscribe(params => {
+
+      const id = params.get('id');
+
+      if (id) {
+        this.sneakerId = +id;  // Convierte el id a número
+
+        if (this.buscarSneakerPorId(this.sneakerId)) {
+          this.sneakerSeleccionado = this.buscarSneakerPorId(this.sneakerId);
+        }
+        else {
+          this.router.navigate(['/home']);
+        }
+      }
+    });
+  }
+
+  private buscarSneakerPorId(id: number): Producto | undefined {
+    return this.sneakers.find(sneaker => sneaker.id === id);
+  }
 
 }
