@@ -2,248 +2,91 @@
   <div class="mx-auto px-4 lg:px-12 w-full">
     <h1 class="font-semibold text-white text-3xl py-4">{{ tituloPagina }}</h1>
 
-    <div class="bg-gray-800relative shadow-lg rounded-lg overflow-hidden">
+    <div class="bg-gray-800 relative shadow-lg rounded-lg overflow-hidden">
       <div class="lg:max-h-[600px] overflow-y-auto">
         <table class="w-full text-sm text-left text-gray-500 table-fixed">
           <thead
             class="text-xs text-gray-100 uppercase bg-gray-800 sticky top-0 z-10"
           >
             <tr>
-              <th scope="col" class="px-4 py-3 text-center">Título tarea</th>
+              <th scope="col" class="px-4 py-3 text-center lg:w-[25%]">
+                Título tarea
+              </th>
               <th scope="col" class="px-4 py-3 text-center">Descripción</th>
-              <th scope="col" class="px-4 py-3 text-center">Prioridad</th>
-              <th scope="col" class="px-4 py-3 text-center">Acciones</th>
+              <th scope="col" class="px-4 py-3 text-center lg:w-[7%]">
+                Prioridad
+              </th>
+              <th scope="col" class="px-4 py-3 text-center lg:w-[11%]">
+                Acciones
+              </th>
             </tr>
           </thead>
 
           <tbody class="bg-white">
+            @for (tarea of tareas; track $index) {
             <tr class="border-b dark:border-gray-700">
               <th
                 scope="row"
-                class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white border-r"
               >
-                Título tarea
+                {{ tarea.titulo }}
               </th>
-              <td class="px-4 py-3">Descripción tarea</td>
-              <td class="px-4 py-3 text-center">Alta</td>
-              <td class="px-4 py-3 flex justify-center">
-                <button
-                  type="button"
-                  class="bg-green-500 text-white p-2 mr-2 rounded"
-                >
-                  <i class="fa-solid fa-check"></i> Finalizar
-                </button>
-                <button
-                  type="button"
-                  class="bg-blue-600 text-white p-2 mr-2 rounded"
-                >
-                  <i class="fa-solid fa-pencil"></i> Editar
-                </button>
-                <button type="button" class="bg-red-600 text-white p-2 rounded">
-                  <i class="fa-solid fa-trash"></i> Borrar
-                </button>
-              </td>
-            </tr>
 
-            <tr class="border-b dark:border-gray-700">
-              <th
-                scope="row"
-                class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-              >
-                Título tarea
-              </th>
-              <td class="px-4 py-3">Descripción tarea</td>
-              <td class="px-4 py-3 text-center">Alta</td>
-              <td class="px-4 py-3 flex justify-center">
-                <button
-                  type="button"
-                  class="bg-green-500 text-white p-2 mr-2 rounded"
-                >
-                  <i class="fa-solid fa-check"></i> Finalizar
-                </button>
-                <button
-                  type="button"
-                  class="bg-blue-600 text-white p-2 mr-2 rounded"
-                >
-                  <i class="fa-solid fa-pencil"></i> Editar
-                </button>
-                <button type="button" class="bg-red-600 text-white p-2 rounded">
-                  <i class="fa-solid fa-trash"></i> Borrar
-                </button>
+              <td class="px-4 py-3 border-r">
+                {{ tarea.descripcion }}
               </td>
-            </tr>
 
-            <tr class="border-b dark:border-gray-700">
-              <th
-                scope="row"
-                class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-              >
-                Título tarea
-              </th>
-              <td class="px-4 py-3">Descripción tarea</td>
-              <td class="px-4 py-3 text-center">Alta</td>
-              <td class="px-4 py-3 flex justify-center">
-                <button
-                  type="button"
-                  class="bg-green-500 text-white p-2 mr-2 rounded"
-                >
-                  <i class="fa-solid fa-check"></i> Finalizar
-                </button>
-                <button
-                  type="button"
-                  class="bg-blue-600 text-white p-2 mr-2 rounded"
-                >
-                  <i class="fa-solid fa-pencil"></i> Editar
-                </button>
-                <button type="button" class="bg-red-600 text-white p-2 rounded">
-                  <i class="fa-solid fa-trash"></i> Borrar
-                </button>
+              @if(tarea.prioridad == "Alta"){
+              <td class="px-4 py-3 text-center border-r text-red-600 font-bold">
+                {{ tarea.prioridad }}
               </td>
-            </tr>
+              } @else if(tarea.prioridad == "Media") {
+              <td
+                class="px-4 py-3 text-center border-r text-blue-600 font-medium"
+              >
+                {{ tarea.prioridad }}
+              </td>
+              } @else {
+              <td
+                class="px-4 py-3 text-center border-r text-green-600 font-medium"
+              >
+                {{ tarea.prioridad }}
+              </td>
+              }
 
-            <tr class="border-b dark:border-gray-700">
-              <th
-                scope="row"
-                class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-              >
-                Título tarea
-              </th>
-              <td class="px-4 py-3">Descripción tarea</td>
-              <td class="px-4 py-3 text-center">Alta</td>
               <td class="px-4 py-3 flex justify-center">
                 <button
                   type="button"
-                  class="bg-green-500 text-white p-2 mr-2 rounded"
+                  class="bg-green-600 text-white w-10 h-10 mr-4 rounded-full flex items-center justify-center hover:bg-green-700 focus:outline-none"
                 >
-                  <i class="fa-solid fa-check"></i> Finalizar
+                  <i class="fa-solid fa-check"></i>
                 </button>
-                <button
-                  type="button"
-                  class="bg-blue-600 text-white p-2 mr-2 rounded"
-                >
-                  <i class="fa-solid fa-pencil"></i> Editar
-                </button>
-                <button type="button" class="bg-red-600 text-white p-2 rounded">
-                  <i class="fa-solid fa-trash"></i> Borrar
-                </button>
-              </td>
-            </tr>
 
-            <tr class="border-b dark:border-gray-700">
-              <th
-                scope="row"
-                class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-              >
-                Título tarea
-              </th>
-              <td class="px-4 py-3">Descripción tarea</td>
-              <td class="px-4 py-3 text-center">Alta</td>
-              <td class="px-4 py-3 flex justify-center">
                 <button
+                  (click)="togglePopup(tarea.id)"
                   type="button"
-                  class="bg-green-500 text-white p-2 mr-2 rounded"
+                  class="bg-blue-600 text-white w-10 h-10 mr-4 rounded-full flex items-center justify-center hover:bg-blue-700 focus:outline-none"
                 >
-                  <i class="fa-solid fa-check"></i> Finalizar
+                  <i class="fa-solid fa-pencil"></i>
                 </button>
-                <button
-                  type="button"
-                  class="bg-blue-600 text-white p-2 mr-2 rounded"
-                >
-                  <i class="fa-solid fa-pencil"></i> Editar
-                </button>
-                <button type="button" class="bg-red-600 text-white p-2 rounded">
-                  <i class="fa-solid fa-trash"></i> Borrar
-                </button>
-              </td>
-            </tr>
 
-            <tr class="border-b dark:border-gray-700">
-              <th
-                scope="row"
-                class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-              >
-                Título tarea
-              </th>
-              <td class="px-4 py-3">Descripción tarea</td>
-              <td class="px-4 py-3 text-center">Alta</td>
-              <td class="px-4 py-3 flex justify-center">
                 <button
                   type="button"
-                  class="bg-green-500 text-white p-2 mr-2 rounded"
+                  class="bg-red-600 text-white w-10 h-10 rounded-full flex items-center justify-center hover:bg-red-700 focus:outline-none"
                 >
-                  <i class="fa-solid fa-check"></i> Finalizar
-                </button>
-                <button
-                  type="button"
-                  class="bg-blue-600 text-white p-2 mr-2 rounded"
-                >
-                  <i class="fa-solid fa-pencil"></i> Editar
-                </button>
-                <button type="button" class="bg-red-600 text-white p-2 rounded">
-                  <i class="fa-solid fa-trash"></i> Borrar
+                  <i class="fa-solid fa-trash"></i>
                 </button>
               </td>
             </tr>
-
-            <tr class="border-b dark:border-gray-700">
-              <th
-                scope="row"
-                class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-              >
-                Título tarea
-              </th>
-              <td class="px-4 py-3">Descripción tarea</td>
-              <td class="px-4 py-3 text-center">Alta</td>
-              <td class="px-4 py-3 flex justify-center">
-                <button
-                  type="button"
-                  class="bg-green-500 text-white p-2 mr-2 rounded"
-                >
-                  <i class="fa-solid fa-check"></i> Finalizar
-                </button>
-                <button
-                  type="button"
-                  class="bg-blue-600 text-white p-2 mr-2 rounded"
-                >
-                  <i class="fa-solid fa-pencil"></i> Editar
-                </button>
-                <button type="button" class="bg-red-600 text-white p-2 rounded">
-                  <i class="fa-solid fa-trash"></i> Borrar
-                </button>
-              </td>
-            </tr>
-
-            <tr class="border-b dark:border-gray-700">
-              <th
-                scope="row"
-                class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-              >
-                Título tarea
-              </th>
-              <td class="px-4 py-3">Descripción tarea</td>
-              <td class="px-4 py-3 text-center">Alta</td>
-              <td class="px-4 py-3 flex justify-center">
-                <button
-                  type="button"
-                  class="bg-green-500 text-white p-2 mr-2 rounded"
-                >
-                  <i class="fa-solid fa-check"></i> Finalizar
-                </button>
-                <button
-                  type="button"
-                  class="bg-blue-600 text-white p-2 mr-2 rounded"
-                >
-                  <i class="fa-solid fa-pencil"></i> Editar
-                </button>
-                <button type="button" class="bg-red-600 text-white p-2 rounded">
-                  <i class="fa-solid fa-trash"></i> Borrar
-                </button>
-              </td>
-            </tr>
-            <!-- Repite filas según sea necesario -->
+            }
           </tbody>
         </table>
       </div>
     </div>
   </div>
 </section>
+<app-popup
+  *ngIf="isPopupVisible"
+  [tarea]="tareaSeleccionada!"
+  (cerrarPopup)="isPopupVisible = false"
+></app-popup>

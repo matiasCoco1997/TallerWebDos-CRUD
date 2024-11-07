@@ -1,0 +1,40 @@
+<div
+  class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center"
+>
+  <div class="bg-white p-6 rounded-lg shadow-lg max-w-lg w-full">
+    <h2 class="text-xl font-semibold mb-3 text-center">
+      Editar tarea nro: {{ tarea.id }}
+    </h2>
+
+    <div class="mb-4">
+      <label class="w-full">Título de la tarea</label>
+      <input class="w-full" type="text" value="{{ tarea.titulo }}" />
+    </div>
+
+    <div class="mb-4">
+      <label class="w-full">Título de la tarea</label>
+      <input class="w-full" type="text" value="{{ tarea.descripcion }}" />
+    </div>
+
+    <div class="mb-4">
+      <label class="w-full">Título de la tarea</label>
+      <input class="w-full" type="text" value="{{ tarea.prioridad }}" />
+    </div>
+
+    <div class="flex justify-center items-center">
+      <button
+        type="button"
+        class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 mr-4 w-[30%]"
+      >
+        Actualizar
+      </button>
+
+      <button
+        (click)="cerrar()"
+        class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 w-[30%]"
+      >
+        Cerrar
+      </button>
+    </div>
+  </div>
+</div>
