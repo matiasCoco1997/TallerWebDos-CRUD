@@ -9,4 +9,6 @@ import { Component } from '@angular/core';
 })
 export class HomeComponent {
 
+  public tituloPagina: string = "Listado de tareas";
+
 }
