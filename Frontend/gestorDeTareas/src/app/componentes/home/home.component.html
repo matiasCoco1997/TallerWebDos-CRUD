@@ -1,7 +1,22 @@
 <section class="h-full p-3 sm:p-5 flex justify-center items-center">
   <div class="mx-auto px-4 lg:px-12 w-full">
-    <h1 class="font-semibold text-white text-3xl py-4">{{ tituloPagina }}</h1>
+    <div class="flex justify-between">
+      <h1 class="font-semibold text-white text-3xl py-4 w-[50%]">
+        {{ tituloPagina }}
+      </h1>
 
+      <div class="w-[15%] flex justify-end items-center">
+        <select
+          (change)="onSelectionChange($event)"
+          id="opcionesFiltrado"
+          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+        >
+          <option selected value="todas">Tareas activas</option>
+          <option value="eliminadas">Tareas eliminadas</option>
+          <option value="finalizadas">Tareas finalizadas</option>
+        </select>
+      </div>
+    </div>
     <div class="bg-gray-800 relative shadow-lg rounded-lg overflow-hidden">
       <div class="lg:max-h-[600px] overflow-y-auto">
         <table class="w-full text-sm text-left text-gray-500 table-fixed">
@@ -16,9 +31,15 @@
               <th scope="col" class="px-4 py-3 text-center lg:w-[7%]">
                 Prioridad
               </th>
+              @if(botonesVisibles){
               <th scope="col" class="px-4 py-3 text-center lg:w-[11%]">
                 Acciones
               </th>
+              } @else {
+              <th scope="col" class="px-4 py-3 text-center lg:w-[11%]">
+                Estado
+              </th>
+              }
             </tr>
           </thead>
 
@@ -52,8 +73,7 @@
               >
                 {{ tarea.prioridad }}
               </td>
-              }
-
+              } @if( botonesVisibles){
               <td class="px-4 py-3 flex justify-center">
                 <button
                   type="button"
@@ -77,6 +97,17 @@
                   <i class="fa-solid fa-trash"></i>
                 </button>
               </td>
+              } @else {
+              <td
+                class="px-4 py-3 text-center border-r font-medium"
+                [ngClass]="{
+                  'text-red-600': estadoTarea === 'Eliminada',
+                  'text-green-600': estadoTarea !== 'Eliminada'
+                }"
+              >
+                {{ estadoTarea }}
+              </td>
+              }
             </tr>
             }
           </tbody>
