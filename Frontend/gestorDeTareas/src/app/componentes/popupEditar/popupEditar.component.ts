@@ -5,8 +5,8 @@ import { Tarea } from '../../Interfaces/tarea';
   selector: 'app-popup',
   standalone: true,
   imports: [],
-  templateUrl: './popup.component.html',
-  styleUrl: './popup.component.css'
+  templateUrl: './popupEditar.component.html',
+  styleUrl: './popupEditar.component.css'
 })
 export class PopupComponent {
   @Input() tarea!: Tarea;

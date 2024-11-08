@@ -3,16 +3,17 @@
     <div
       class="flex flex-wrap justify-between items-center mx-auto max-w-screen-xl"
     >
-      <a routerLink="/home" class="flex items-center">
+      <a routerLink="" class="flex items-center">
         <img src="taskify.png" class="mr-3 h-6 sm:h-9" alt="Taskify Logo" />
       </a>
 
       <div class="flex items-center lg:order-2">
-        <button
+        <a
+          routerLink="crearTarea"
           class="text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800"
         >
           Crear tarea
-        </button>
+        </a>
       </div>
 
       <div
@@ -24,7 +25,7 @@
         >
           <li>
             <a
-              routerLink="/home"
+              routerLink="home"
               class="block py-2 pr-4 pl-3 rounded lg:p-0 text-white hover:text-primary-600"
               >Listado de tareas</a
             >
