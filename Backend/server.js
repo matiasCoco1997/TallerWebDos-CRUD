@@ -3,6 +3,7 @@ const mysql = require('mysql2');
 const cors = require('cors');
 const app = express();
 
+
 app.use(cors());
 app.use(express.json());
 
@@ -55,7 +56,8 @@ app.get('/api/tareas/:id', (req, res) => {
   });
   
   // Crear una nueva tarea
-  app.post('/api/tareas', (req, res) => {
+  app.post('/api/crearTarea', (req, res) => { 
+    console.log(req.body);
     const { titulo, descripcion, prioridad } = req.body;
     connection.query(
       'INSERT INTO tarea (titulo, descripcion, prioridad) VALUES (?, ?, ?)',
