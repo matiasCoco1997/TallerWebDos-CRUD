@@ -1,8 +1,8 @@
 export interface Tarea {
-  id: number;
+  id?: number;
   titulo: string;
   descripcion: string;
   prioridad: string;
-  estadoEliminado: boolean,
-  estadoFinalizado: boolean
+  // estadoEliminado?: boolean,
+  // estadoFinalizado?: boolean
 }

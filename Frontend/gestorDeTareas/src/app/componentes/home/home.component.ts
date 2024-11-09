@@ -1,62 +1,87 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core'; 
 import { Tarea } from '../../Interfaces/tarea';
 import { PopupComponent } from '../popupEditar/popupEditar.component';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms'; // Importa FormsModule
 import { CrearTareaViewComponent } from '../crear-tarea-view/crear-tarea-view.component';
-
+import { TareasService } from '../../service/servicio-tareas.service';
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [PopupComponent, CommonModule],
+  imports: [PopupComponent, CommonModule,FormsModule],
+
   templateUrl: './home.component.html',
-  styleUrl: './home.component.css'
+  styleUrl: './home.component.css',
 })
 export class HomeComponent implements OnInit {
-  public tituloPagina: string = "Listado de tareas";
-
-  private tareasBDD: Tarea[] = [
-    { id: 1, titulo: 'Título tarea', descripcion: 'Descripción tarea', prioridad: "Alta", estadoEliminado: false, estadoFinalizado: false },
-    { id: 2, titulo: 'Título tarea', descripcion: 'Descripción tarea', prioridad: "Media", estadoEliminado: false, estadoFinalizado: false },
-    { id: 3, titulo: 'Título tarea', descripcion: 'Descripción tarea', prioridad: "Baja", estadoEliminado: false, estadoFinalizado: false },
-    { id: 4, titulo: 'Título tarea', descripcion: 'Descripción tarea', prioridad: "Media", estadoEliminado: false, estadoFinalizado: false },
-    { id: 5, titulo: 'Título tarea', descripcion: 'Descripción tarea', prioridad: "Baja", estadoEliminado: false, estadoFinalizado: false },
-    { id: 6, titulo: 'Título tarea', descripcion: 'Descripción tarea', prioridad: "Alta", estadoEliminado: false, estadoFinalizado: true },
-    { id: 7, titulo: 'Título tarea', descripcion: 'Descripción tarea', prioridad: "Baja", estadoEliminado: false, estadoFinalizado: true },
-    { id: 8, titulo: 'Título tarea', descripcion: 'Descripción tarea', prioridad: "Media", estadoEliminado: true, estadoFinalizado: false },
-    { id: 9, titulo: 'Título tarea', descripcion: 'Descripción tarea', prioridad: "Alta", estadoEliminado: true, estadoFinalizado: false },
-    { id: 10, titulo: 'Título tarea', descripcion: 'Descripción tarea', prioridad: "Alta", estadoEliminado: false, estadoFinalizado: false },
-  ];
-
+  public tituloPagina: string = 'Listado de tareas';
   public tareas: Tarea[] = [];
-
   public isPopupVisible = false;
-
   public tareaSeleccionada: Tarea | null = null;
   public tituloPopUp!: string;
   public botonesVisibles: boolean = true;
-  public estadoTarea: string = "";
-
+  public estadoTarea: string = '';
+   // Variables enlazadas al formulario
+   public titulo: string = '';
+   public descripcion: string = '';
+   public prioridad: string = 'Alta'; // Valor por defecto
+  constructor(private _servicoTareas: TareasService) {} 
 
   ngOnInit(): void {
-    //aca hay que cargarle la lista de tareas del back
-    this.listarTareasActivas();
+    this._servicoTareas.traerTareas().subscribe(
+      (tareas) => {
+        this.tareas = tareas; // Asigna las tareas obtenidas a la variable tareas
+      },
+      (error) => {
+        console.error('Error al cargar tareas:', error); // Manejo de errores
+      }
+    ); 
   }
+ 
 
   public togglePopupEditar(id: number) {
-    const tareaEncontrada = this.tareas.find(tarea => tarea.id === id);
+    const tareaEncontrada = this.tareas.find((tarea) => tarea.id === id);
 
-    if (tareaEncontrada && tareaEncontrada.estadoEliminado == false && tareaEncontrada.estadoFinalizado == false) {
+    if (
+      tareaEncontrada
+      //  &&
+      // tareaEncontrada.estadoEliminado == false &&
+      // tareaEncontrada.estadoFinalizado == false
+    ) {
       this.tareaSeleccionada = tareaEncontrada;
       this.isPopupVisible = !this.isPopupVisible;
+
+      this._servicoTareas.traerTareas().subscribe(
+        (tareas) => {
+          this.tareas = tareas; // Asigna las tareas obtenidas a la variable tareas
+        },
+        (error) => {
+          console.error('Error al cargar tareas:', error); // Manejo de errores
+        }
+      ); 
     }
   }
+  public onSubmit(): void {
+    this.crearTareaDirectamente(this.titulo, this.descripcion, this.prioridad);
+  }
 
+  public crearTareaDirectamente(titulo: string, descripcion: string, prioridad: string): void {
+    // Definir el objeto de la nueva tarea
+    const nuevaTarea: Tarea = { 
+      titulo,
+      descripcion,
+      prioridad,
+    };
+
+    // Llamar al servicio para crear la tarea en el backend
+    this._servicoTareas.crearTarea(nuevaTarea).subscribe();
+  }
   public listarTareasActivas() {
     let tareasActivas: Tarea[] = [];
-    this.tareasBDD.forEach(tarea => {
-      if (!tarea.estadoEliminado && !this.tareaSeleccionada?.estadoFinalizado) {
+    this.tareas.forEach((tarea) => {
+      
         tareasActivas.push(tarea);
-      }
+      
     });
     this.tareas = tareasActivas;
   }
@@ -64,21 +89,21 @@ export class HomeComponent implements OnInit {
   public listarTareasFinalizadas() {
     let tareasFinalizadas: Tarea[] = [];
 
-    this.tareasBDD.forEach(tarea => {
-      if (tarea.estadoEliminado == false && tarea.estadoFinalizado == true) {
+    this.tareas.forEach((tarea) => {
+   
         tareasFinalizadas.push(tarea);
-      }
+    
     });
     this.tareas = tareasFinalizadas;
   }
 
   public listarTareasEliminadas() {
     let tareasEliminadas: Tarea[] = [];
-    this.tareasBDD.forEach(tarea => {
+    this.tareas.forEach((tarea) => {
       console.log();
-      if (tarea.estadoEliminado == true && tarea.estadoFinalizado == false) {
+       
         tareasEliminadas.push(tarea);
-      }
+     
     });
     console.log(tareasEliminadas);
     this.tareas = tareasEliminadas;
@@ -87,16 +112,16 @@ export class HomeComponent implements OnInit {
   public onSelectionChange(event: Event): void {
     const opcionSeleccionada = (event.target as HTMLSelectElement).value;
     switch (opcionSeleccionada) {
-      case "finalizadas":
+      case 'finalizadas':
         this.listarTareasFinalizadas();
         this.botonesVisibles = false;
-        this.estadoTarea = "Finalizada";
+        this.estadoTarea = 'Finalizada';
         break;
 
-      case "eliminadas":
+      case 'eliminadas':
         this.listarTareasEliminadas();
         this.botonesVisibles = false;
-        this.estadoTarea = "Eliminada";
+        this.estadoTarea = 'Eliminada';
         break;
 
       default:
@@ -105,5 +130,4 @@ export class HomeComponent implements OnInit {
         break;
     }
   }
-
 }
