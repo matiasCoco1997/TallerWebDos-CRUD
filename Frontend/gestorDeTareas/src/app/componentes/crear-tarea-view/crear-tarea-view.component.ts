@@ -26,13 +26,13 @@ export class CrearTareaViewComponent {
   public formGroup = this._formBuilder.group({
     titulo: ['', Validators.required],
     descripcion: ['', [Validators.required]],
-    prioridad: ['', Validators.required], 
+    prioridad: ['Alta', Validators.required],
   });
 
   constructor(
     private _servicioTareas: TareasService,
     private router: Router
-  ) {} 
+  ) { }
 
   public crearTarea(): void {
     if (this.formGroup.valid) {
@@ -56,6 +56,6 @@ export class CrearTareaViewComponent {
   }
 
   public inputTituloInvalido: boolean = false;
-  public inputDescripcionInvalido: boolean = false; 
+  public inputDescripcionInvalido: boolean = false;
   public inputPrioridadInvalido: boolean = false;
 }

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms'; 
+import { FormsModule } from '@angular/forms';
 import { PopupComponent } from '../popupEditar/popupEditar.component';
 import { TareasService } from '../../service/servicio-tareas.service';
 import { Tarea } from '../../Interfaces/tarea';
@@ -24,8 +24,9 @@ export class HomeComponent implements OnInit {
   public tareaSeleccionada: Tarea | null = null;
   public botonesVisibles: boolean = true;
   public estadoTarea: string = 'Activa';
+  public tituloBusqueda: string = "activas";
 
-  constructor(private _servicoTareas: TareasService) {}
+  constructor(private _servicoTareas: TareasService) { }
 
   ngOnInit(): void {
     this.cargarTareas(); // Cargar todas las tareas y aplicar filtro inicial
@@ -70,14 +71,17 @@ export class HomeComponent implements OnInit {
     this.tareas = this.todasLasTareas.filter(
       (tarea) => !tarea.estadoEliminado && !tarea.estadoFinalizado
     );
+    this.tituloBusqueda = "activas";
   }
 
   public listarTareasFinalizadas(): void {
     this.tareas = this.todasLasTareas.filter((tarea) => tarea.estadoFinalizado);
+    this.tituloBusqueda = "finalizadas";
   }
 
   public listarTareasEliminadas(): void {
     this.tareas = this.todasLasTareas.filter((tarea) => tarea.estadoEliminado);
+    this.tituloBusqueda = "eliminadas";
   }
 
   public togglePopupEditar(id: number): void {
@@ -92,6 +96,7 @@ export class HomeComponent implements OnInit {
     this._servicoTareas.editarTarea(tareaActualizada.id!, tareaActualizada).subscribe(
       () => {
         this.cargarTareas(); // Recarga las tareas
+        //TODO: ENVIAR MENSAJE DEL TOAST QUE SE ACTUALIZO LA TAREA
         this.isPopupVisible = false;
       },
       (error) => {
@@ -104,6 +109,7 @@ export class HomeComponent implements OnInit {
     this._servicoTareas.eliminarTarea(id).subscribe(
       () => {
         this.cargarTareas();
+        //TODO: ENVIAR MENSAJE DEL TOAST QUE SE ELIMINO LA TAREA
       },
       (error) => {
         console.error('Error al eliminar la tarea:', error);
@@ -115,6 +121,7 @@ export class HomeComponent implements OnInit {
     this._servicoTareas.finalizarTarea(id).subscribe(
       () => {
         this.cargarTareas();
+        //TODO: ENVIAR MENSAJE DEL TOAST QUE SE FINALIZO LA TAREA
       },
       (error) => {
         console.error('Error al finalizar la tarea:', error);
