@@ -1,27 +1,76 @@
-# GestorDeTareas
+Gestor de Tareas
+Este proyecto es un gestor de tareas desarrollado como parte de la materia Taller Web II de la carrera TECNICATURA EN DESARROLLO WEB de la Universidad Nacional de La Matanza. Permite crear, listar, actualizar y eliminar tareas. El frontend está desarrollado con Angular, mientras que el backend utiliza Node.js y Express para conectarse a una base de datos MySQL.
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 18.2.6.
+Desarrolladores
+Matías Coco
+Nicolás Piedrabuena
+Victoria Gambaro
 
-## Development server
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+Tecnologías utilizadas
+Frontend: Angular, TypeScript, HTML, CSS
+Backend: Node.js, Express
+Base de datos: MySQL
 
-## Code scaffolding
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+Estructura del proyecto
+Backend: Contiene la lógica del servidor, incluyendo la configuración de la base de datos, los controladores de tareas, y las rutas de la API.
+Frontend (gestorDeTareas): Contiene el código de Angular para la interfaz de usuario y los componentes relacionados con la gestión de tareas.
 
-## Build
+Configuración y uso
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+Requisitos previos
+Asegúrate de tener instalados Node.js y MySQL en tu sistema.
 
-## Running unit tests
+Instalación
+Clona el repositorio:
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+bash
+Copiar código
+git clone https://github.com/matiasCoco1997/TallerWebDos-CRUD.git
+cd TallerWebDos-CRUD
 
-## Running end-to-end tests
+Configura la base de datos MySQL:
+Crea una base de datos llamada task y ejecuta el siguiente script para crear la tabla tarea:
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+sql
+CREATE TABLE `tarea` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `titulo` varchar(100) DEFAULT NULL,
+  `descripcion` varchar(500) DEFAULT NULL,
+  `prioridad` varchar(20) DEFAULT NULL,
+  `estadoEliminado` tinyint(1) DEFAULT 0,
+  `estadoFinalizado` tinyint(1) DEFAULT 0,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
-## Further help
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+Configura el archivo db.js:
+En la carpeta Backend, personaliza según tus credenciales de MySQL.
+
+Iniciar BACKEND:
+Los comandos para iniciar el BACKEND en el bash son
+cd Backend
+npm install (solo la primera vez)
+npm start
+Esto iniciará el servidor en http://localhost:3000.
+
+Iniciar FRONTEND
+Instala las dependencias del frontend en el bash:
+cd ../Frontend/gestorDeTareas
+npm install
+
+Ejecuta la aplicación Angular:
+ng serve --port 3001
+La aplicación estará disponible en http://localhost:3001.
+
+Funcionalidad:
+Crear tarea: Agrega una nueva tarea con título, descripción y prioridad.
+Listar tareas: Muestra todas las tareas activas, eliminadas o finalizadas según el filtro seleccionado.
+Actualizar tarea: Permite editar los detalles de una tarea específica.
+Eliminar tarea: Marca una tarea como eliminada (sin eliminarla físicamente de la base de datos).
+Finalizar tarea: Cambia el estado de una tarea a "finalizada".
+
+Notas adicionales
+Este proyecto está diseñado para aprender y aplicar conceptos de desarrollo web en el contexto de un CRUD. No se recomienda para producción sin modificaciones adicionales de seguridad y optimización.
+
