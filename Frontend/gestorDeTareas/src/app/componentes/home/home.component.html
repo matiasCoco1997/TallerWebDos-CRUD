@@ -1,5 +1,6 @@
 <section class="h-full p-3 sm:p-5 flex justify-center items-center">
   <div class="mx-auto px-4 lg:px-12 w-full">
+    <!-- Título y selector de filtrado -->
     <div class="flex justify-between">
       <h1 class="font-semibold text-white text-3xl py-4 w-[50%]">
         {{ tituloPagina }}
@@ -17,6 +18,8 @@
         </select>
       </div>
     </div>
+
+    <!-- Tabla de tareas -->
     <div class="bg-gray-800 relative shadow-lg rounded-lg overflow-hidden">
       <div class="lg:max-h-[600px] overflow-y-auto">
         <table class="w-full text-sm text-left text-gray-500 table-fixed">
@@ -24,28 +27,24 @@
             class="text-xs text-gray-100 uppercase bg-gray-800 sticky top-0 z-10"
           >
             <tr>
-              <th scope="col" class="px-4 py-3 text-center lg:w-[25%]">
-                Título tarea
-              </th>
+              <th scope="col" class="px-4 py-3 text-center lg:w-[25%]">Título tarea</th>
               <th scope="col" class="px-4 py-3 text-center">Descripción</th>
-              <th scope="col" class="px-4 py-3 text-center lg:w-[7%]">
-                Prioridad
-              </th>
-              @if(botonesVisibles){
-              <th scope="col" class="px-4 py-3 text-center lg:w-[11%]">
+              <th scope="col" class="px-4 py-3 text-center lg:w-[7%]">Prioridad</th>
+              <th
+                scope="col"
+                class="px-4 py-3 text-center lg:w-[11%]"
+                *ngIf="botonesVisibles; else estadoColumn"
+              >
                 Acciones
               </th>
-              } @else {
-              <th scope="col" class="px-4 py-3 text-center lg:w-[11%]">
-                Estado
-              </th>
-              }
+              <ng-template #estadoColumn>
+                <th scope="col" class="px-4 py-3 text-center lg:w-[11%]">Estado</th>
+              </ng-template>
             </tr>
           </thead>
 
           <tbody class="bg-white">
-            @for (tarea of tareas; track $index) {
-            <tr class="border-b dark:border-gray-700">
+            <tr *ngFor="let tarea of tareas" class="border-b dark:border-gray-700">
               <th
                 scope="row"
                 class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white border-r"
@@ -57,31 +56,29 @@
                 {{ tarea.descripcion }}
               </td>
 
-              @if(tarea.prioridad == "Alta"){
-              <td class="px-4 py-3 text-center border-r text-red-600 font-bold">
-                {{ tarea.prioridad }}
-              </td>
-              } @else if(tarea.prioridad == "Media") {
               <td
-                class="px-4 py-3 text-center border-r text-blue-600 font-medium"
+                class="px-4 py-3 text-center border-r"
+                [ngClass]="{
+                  'text-red-600 font-bold': tarea.prioridad === 'Alta',
+                  'text-blue-600 font-medium': tarea.prioridad === 'Media',
+                  'text-green-600 font-medium': tarea.prioridad === 'Baja'
+                }"
               >
                 {{ tarea.prioridad }}
               </td>
-              } @else {
-              <td
-                class="px-4 py-3 text-center border-r text-green-600 font-medium"
-              >
-                {{ tarea.prioridad }}
-              </td>
-              } @if( botonesVisibles){
-              <td class="px-4 py-3 flex justify-center">
+
+              <!-- Botones para acciones -->
+              <td *ngIf="botonesVisibles; else estadoTemplate" class="px-4 py-3 flex justify-center">
+                <!-- Botón para finalizar tarea -->
                 <button
+                  (click)="finalizarTarea(tarea.id!)"
                   type="button"
                   class="bg-green-600 text-white w-10 h-10 mr-4 rounded-full flex items-center justify-center hover:bg-green-700 focus:outline-none"
                 >
                   <i class="fa-solid fa-check"></i>
                 </button>
 
+                <!-- Botón para editar tarea -->
                 <button
                   (click)="togglePopupEditar(tarea.id!)"
                   type="button"
@@ -90,26 +87,30 @@
                   <i class="fa-solid fa-pencil"></i>
                 </button>
 
+                <!-- Botón para eliminar tarea -->
                 <button
+                  (click)="eliminarTarea(tarea.id!)"
                   type="button"
                   class="bg-red-600 text-white w-10 h-10 rounded-full flex items-center justify-center hover:bg-red-700 focus:outline-none"
                 >
                   <i class="fa-solid fa-trash"></i>
                 </button>
               </td>
-              } @else {
-              <td
-                class="px-4 py-3 text-center border-r font-medium"
-                [ngClass]="{
-                  'text-red-600': estadoTarea === 'Eliminada',
-                  'text-green-600': estadoTarea !== 'Eliminada'
-                }"
-              >
-                {{ estadoTarea }}
-              </td>
-              }
+
+              <!-- Estado de las tareas eliminadas/finalizadas -->
+              <ng-template #estadoTemplate>
+                <td
+                  class="px-4 py-3 text-center border-r font-medium"
+                  [ngClass]="{
+                    'text-red-600': estadoTarea === 'Eliminada',
+                    'text-green-600': estadoTarea === 'Finalizada',
+                    'text-gray-600': estadoTarea !== 'Finalizada' && estadoTarea !== 'Eliminada'
+                  }"
+                >
+                  {{ estadoTarea }}
+                </td>
+              </ng-template>
             </tr>
-            }
           </tbody>
         </table>
       </div>
@@ -117,8 +118,10 @@
   </div>
 </section>
 
+<!-- Popup para editar tarea -->
 <app-popup
   *ngIf="isPopupVisible"
   [tarea]="tareaSeleccionada!"
+  (tareaActualizada)="actualizarTarea($event)"
   (cerrarPopup)="isPopupVisible = false"
 ></app-popup>

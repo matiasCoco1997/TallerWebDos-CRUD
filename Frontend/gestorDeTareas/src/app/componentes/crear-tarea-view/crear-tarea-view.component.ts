@@ -6,19 +6,21 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { Tarea } from '../../Interfaces/tarea';
 import { TareasService } from '../../service/servicio-tareas.service';
-
+import { Router } from '@angular/router'; // Importar Router
 
 @Component({
   selector: 'app-crear-tarea-view',
   standalone: true,
-  imports: [ReactiveFormsModule,
+  imports: [
+    ReactiveFormsModule,
     MatSelectModule,
     MatInputModule,
-    MatFormFieldModule,CommonModule],
+    MatFormFieldModule,
+    CommonModule,
+  ],
   templateUrl: './crear-tarea-view.component.html',
-  styleUrl: './crear-tarea-view.component.css'
+  styleUrls: ['./crear-tarea-view.component.css']
 })
-
 export class CrearTareaViewComponent {
   private readonly _formBuilder = inject(FormBuilder);
   public formGroup = this._formBuilder.group({
@@ -27,18 +29,31 @@ export class CrearTareaViewComponent {
     prioridad: ['', Validators.required], 
   });
 
-constructor(private _servicioTareas: TareasService) {} 
+  constructor(
+    private _servicioTareas: TareasService,
+    private router: Router
+  ) {} 
 
-public crearTarea():void{
-   let tarea : Tarea = {
-    titulo : this.formGroup.controls.titulo.value!,
-    descripcion : this.formGroup.controls.descripcion.value!,
-    prioridad : this.formGroup.controls.prioridad.value!
-   }
-   this._servicioTareas.crearTarea(tarea).subscribe(()=>{});
+  public crearTarea(): void {
+    if (this.formGroup.valid) {
+      let tarea: Tarea = {
+        titulo: this.formGroup.controls.titulo.value!,
+        descripcion: this.formGroup.controls.descripcion.value!,
+        prioridad: this.formGroup.controls.prioridad.value!
+      };
 
-}
-
+      this._servicioTareas.crearTarea(tarea).subscribe(
+        () => {
+          this.router.navigate(['/']);
+        },
+        (error) => {
+          console.error('Error al crear la tarea:', error);
+        }
+      );
+    } else {
+      console.error('Formulario inválido');
+    }
+  }
 
   public inputTituloInvalido: boolean = false;
   public inputDescripcionInvalido: boolean = false; 

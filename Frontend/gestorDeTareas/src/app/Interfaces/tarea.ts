@@ -3,6 +3,6 @@ export interface Tarea {
   titulo: string;
   descripcion: string;
   prioridad: string;
-  // estadoEliminado?: boolean,
-  // estadoFinalizado?: boolean
+  estadoEliminado?: boolean,
+  estadoFinalizado?: boolean
 }

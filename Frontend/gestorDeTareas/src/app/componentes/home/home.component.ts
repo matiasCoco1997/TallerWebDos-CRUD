@@ -1,112 +1,46 @@
-import { Component, OnInit } from '@angular/core'; 
-import { Tarea } from '../../Interfaces/tarea';
-import { PopupComponent } from '../popupEditar/popupEditar.component';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms'; // Importa FormsModule
-import { CrearTareaViewComponent } from '../crear-tarea-view/crear-tarea-view.component';
+import { FormsModule } from '@angular/forms'; 
+import { PopupComponent } from '../popupEditar/popupEditar.component';
 import { TareasService } from '../../service/servicio-tareas.service';
+import { Tarea } from '../../Interfaces/tarea';
+
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [PopupComponent, CommonModule,FormsModule],
-
+  imports: [
+    CommonModule,
+    FormsModule,
+    PopupComponent
+  ],
   templateUrl: './home.component.html',
-  styleUrl: './home.component.css',
+  styleUrls: ['./home.component.css'],
 })
 export class HomeComponent implements OnInit {
   public tituloPagina: string = 'Listado de tareas';
-  public tareas: Tarea[] = [];
+  public tareas: Tarea[] = []; // Tareas a mostrar en pantalla
+  private todasLasTareas: Tarea[] = []; // Todas las tareas desde el backend
   public isPopupVisible = false;
   public tareaSeleccionada: Tarea | null = null;
-  public tituloPopUp!: string;
   public botonesVisibles: boolean = true;
-  public estadoTarea: string = '';
-   // Variables enlazadas al formulario
-   public titulo: string = '';
-   public descripcion: string = '';
-   public prioridad: string = 'Alta'; // Valor por defecto
-  constructor(private _servicoTareas: TareasService) {} 
+  public estadoTarea: string = 'Activa';
+
+  constructor(private _servicoTareas: TareasService) {}
 
   ngOnInit(): void {
+    this.cargarTareas(); // Cargar todas las tareas y aplicar filtro inicial
+  }
+
+  private cargarTareas(): void {
     this._servicoTareas.traerTareas().subscribe(
       (tareas) => {
-        this.tareas = tareas; // Asigna las tareas obtenidas a la variable tareas
+        this.todasLasTareas = tareas; // Guarda todas las tareas
+        this.listarTareasActivas(); // Aplica filtro inicial de tareas activas
       },
       (error) => {
-        console.error('Error al cargar tareas:', error); // Manejo de errores
+        console.error('Error al cargar tareas:', error);
       }
-    ); 
-  }
- 
-
-  public togglePopupEditar(id: number) {
-    const tareaEncontrada = this.tareas.find((tarea) => tarea.id === id);
-
-    if (
-      tareaEncontrada
-      //  &&
-      // tareaEncontrada.estadoEliminado == false &&
-      // tareaEncontrada.estadoFinalizado == false
-    ) {
-      this.tareaSeleccionada = tareaEncontrada;
-      this.isPopupVisible = !this.isPopupVisible;
-
-      this._servicoTareas.traerTareas().subscribe(
-        (tareas) => {
-          this.tareas = tareas; // Asigna las tareas obtenidas a la variable tareas
-        },
-        (error) => {
-          console.error('Error al cargar tareas:', error); // Manejo de errores
-        }
-      ); 
-    }
-  }
-  public onSubmit(): void {
-    this.crearTareaDirectamente(this.titulo, this.descripcion, this.prioridad);
-  }
-
-  public crearTareaDirectamente(titulo: string, descripcion: string, prioridad: string): void {
-    // Definir el objeto de la nueva tarea
-    const nuevaTarea: Tarea = { 
-      titulo,
-      descripcion,
-      prioridad,
-    };
-
-    // Llamar al servicio para crear la tarea en el backend
-    this._servicoTareas.crearTarea(nuevaTarea).subscribe();
-  }
-  public listarTareasActivas() {
-    let tareasActivas: Tarea[] = [];
-    this.tareas.forEach((tarea) => {
-      
-        tareasActivas.push(tarea);
-      
-    });
-    this.tareas = tareasActivas;
-  }
-
-  public listarTareasFinalizadas() {
-    let tareasFinalizadas: Tarea[] = [];
-
-    this.tareas.forEach((tarea) => {
-   
-        tareasFinalizadas.push(tarea);
-    
-    });
-    this.tareas = tareasFinalizadas;
-  }
-
-  public listarTareasEliminadas() {
-    let tareasEliminadas: Tarea[] = [];
-    this.tareas.forEach((tarea) => {
-      console.log();
-       
-        tareasEliminadas.push(tarea);
-     
-    });
-    console.log(tareasEliminadas);
-    this.tareas = tareasEliminadas;
+    );
   }
 
   public onSelectionChange(event: Event): void {
@@ -127,7 +61,64 @@ export class HomeComponent implements OnInit {
       default:
         this.listarTareasActivas();
         this.botonesVisibles = true;
+        this.estadoTarea = 'Activa';
         break;
     }
+  }
+
+  public listarTareasActivas(): void {
+    this.tareas = this.todasLasTareas.filter(
+      (tarea) => !tarea.estadoEliminado && !tarea.estadoFinalizado
+    );
+  }
+
+  public listarTareasFinalizadas(): void {
+    this.tareas = this.todasLasTareas.filter((tarea) => tarea.estadoFinalizado);
+  }
+
+  public listarTareasEliminadas(): void {
+    this.tareas = this.todasLasTareas.filter((tarea) => tarea.estadoEliminado);
+  }
+
+  public togglePopupEditar(id: number): void {
+    const tareaEncontrada = this.tareas.find((tarea) => tarea.id === id);
+    if (tareaEncontrada) {
+      this.tareaSeleccionada = tareaEncontrada;
+      this.isPopupVisible = true;
+    }
+  }
+
+  public actualizarTarea(tareaActualizada: Tarea): void {
+    this._servicoTareas.editarTarea(tareaActualizada.id!, tareaActualizada).subscribe(
+      () => {
+        this.cargarTareas(); // Recarga las tareas
+        this.isPopupVisible = false;
+      },
+      (error) => {
+        console.error('Error al actualizar la tarea:', error);
+      }
+    );
+  }
+
+  public eliminarTarea(id: number): void {
+    this._servicoTareas.eliminarTarea(id).subscribe(
+      () => {
+        this.cargarTareas();
+      },
+      (error) => {
+        console.error('Error al eliminar la tarea:', error);
+      }
+    );
+  }
+
+  public finalizarTarea(id: number): void {
+    this._servicoTareas.finalizarTarea(id).subscribe(
+      () => {
+        this.cargarTareas();
+      },
+      (error) => {
+        console.error('Error al finalizar la tarea:', error);
+      }
+    );
   }
 }

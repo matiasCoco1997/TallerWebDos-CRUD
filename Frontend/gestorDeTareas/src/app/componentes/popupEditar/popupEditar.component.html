@@ -1,40 +1,60 @@
-<div
-  class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center"
->
+<div class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center">
   <div class="bg-white p-6 rounded-lg shadow-lg max-w-lg w-full">
     <h2 class="text-xl font-semibold mb-3 text-center">
       Editar tarea número: {{ tarea.id }}
     </h2>
 
-    <div class="mb-4">
-      <label class="w-full">Título de la tarea</label>
-      <input class="w-full" type="text" value="{{ tarea.titulo }}" />
-    </div>
+    <form [formGroup]="formGroup" (ngSubmit)="actualizarTarea()">
+      <div class="mb-4">
+        <label for="titulo" class="w-full">Título de la tarea</label>
+        <input
+          id="titulo"
+          type="text"
+          formControlName="titulo"
+          class="w-full p-2 border rounded"
+          placeholder="Ingrese el título de la tarea"
+        />
+      </div>
 
-    <div class="mb-4">
-      <label class="w-full">Título de la tarea</label>
-      <input class="w-full" type="text" value="{{ tarea.descripcion }}" />
-    </div>
+      <div class="mb-4">
+        <label for="descripcion" class="w-full">Descripción de la tarea</label>
+        <textarea
+          id="descripcion"
+          formControlName="descripcion"
+          class="w-full p-2 border rounded"
+          placeholder="Ingrese la descripción de la tarea"
+        ></textarea>
+      </div>
 
-    <div class="mb-4">
-      <label class="w-full">Título de la tarea</label>
-      <input class="w-full" type="text" value="{{ tarea.prioridad }}" />
-    </div>
+      <div class="mb-4">
+        <label for="prioridad" class="w-full">Prioridad</label>
+        <select
+          id="prioridad"
+          formControlName="prioridad"
+          class="w-full p-2 border rounded"
+        >
+          <option value="Alta">Alta</option>
+          <option value="Media">Media</option>
+          <option value="Baja">Baja</option>
+        </select>
+      </div>
 
-    <div class="flex justify-center items-center">
-      <button
-        type="button"
-        class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 mr-4 w-[30%]"
-      >
-        Actualizar
-      </button>
+      <div class="flex justify-center items-center">
+        <button
+          type="submit"
+          class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 mr-4 w-[30%]"
+        >
+          Actualizar
+        </button>
 
-      <button
-        (click)="cerrar()"
-        class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 w-[30%]"
-      >
-        Cerrar
-      </button>
-    </div>
+        <button
+          type="button"
+          (click)="cerrar()"
+          class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 w-[30%]"
+        >
+          Cerrar
+        </button>
+      </div>
+    </form>
   </div>
 </div>

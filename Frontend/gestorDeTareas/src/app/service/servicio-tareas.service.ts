@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable, inject } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Tarea } from '../Interfaces/tarea';
 import { Observable } from 'rxjs';
 
@@ -9,12 +9,18 @@ import { Observable } from 'rxjs';
 export class TareasService { 
   
   constructor(private http: HttpClient) { }
-  public traerTareas(): Observable<Tarea[]> { 
-    return this.http.get<Tarea[]>('http://localhost:3000/api/tareas');
+
+  public traerTareas(estado?: string): Observable<Tarea[]> { 
+    let url = 'http://localhost:3000/api/tareas';
+    if (estado) {
+      url += `?estado=${estado}`;
+    }
+    return this.http.get<Tarea[]>(url);
   }
 
-   // Obtener una tarea por ID
-   public traerTarea(id: number): Observable<Tarea> {
+
+  // Obtener una tarea por ID
+  public traerTarea(id: number): Observable<Tarea> {
     return this.http.get<Tarea>(`http://localhost:3000/api/tareas/${id}`);
   }
 
@@ -26,13 +32,16 @@ export class TareasService {
 
   // Editar una tarea existente
   public editarTarea(id: number, tarea: Tarea): Observable<Tarea> {
-   
     return this.http.put<Tarea>(`http://localhost:3000/api/tareas/${id}`, tarea);
   }
 
-  // Eliminar una tarea por ID
+  // Marcar tarea como eliminada
   public eliminarTarea(id: number): Observable<void> {
-    return this.http.delete<void>(`http://localhost:3000/api/tareas/${id}`);
+    return this.http.put<void>(`http://localhost:3000/api/tareas/eliminar/${id}`, {});
   }
 
+  // Marcar tarea como finalizada
+  public finalizarTarea(id: number): Observable<void> {
+    return this.http.put<void>(`http://localhost:3000/api/tareas/finalizar/${id}`, {});
+  }
 }
