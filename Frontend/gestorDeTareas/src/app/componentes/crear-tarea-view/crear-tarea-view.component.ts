@@ -6,7 +6,8 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { Tarea } from '../../Interfaces/tarea';
 import { TareasService } from '../../service/servicio-tareas.service';
-import { Router } from '@angular/router'; // Importar Router
+import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-crear-tarea-view',
@@ -31,7 +32,8 @@ export class CrearTareaViewComponent {
 
   constructor(
     private _servicioTareas: TareasService,
-    private router: Router
+    private router: Router,
+    private toastr: ToastrService
   ) { }
 
   public crearTarea(): void {
@@ -44,6 +46,7 @@ export class CrearTareaViewComponent {
 
       this._servicioTareas.crearTarea(tarea).subscribe(
         () => {
+          this.toastr.success('Tarea creada correctamente.');
           this.router.navigate(['/']);
         },
         (error) => {
